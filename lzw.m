@@ -1,15 +1,18 @@
 %% Lempel-Ziv-Welch
-%img = imread('Tagore_Gandhi.jpg');
+
+%img = imread('image_name.jpg');
 %img = imresize(img,0.25);
 %gimg = rgb2gray(img);
-%gimgt = gimg';
-%flattened_img = gimgt(:);
 
+gimg = [50,50,200,200;50,50,200,200;50,50,200,200;50,50,200,200;50,50,200,200;50,50,200,200;50,50,200,200;50,50,200,200]
+gimgt = gimg';
+flattened_img = gimgt(:);
 lenimg = size(flattened_img);
 lenimg = lenimg(1)
 
 compressed_img = [];
 dict = 1;
+
 %% Create a Container 
 code = containers.Map('KeyType','char','ValueType','uint64');
 
@@ -18,6 +21,7 @@ for i=0:255
     code(num2str(i)) = i;
 end
 next_code = 256;
+
 %% Creating the encoded dictionary
 tic
 string = '';
@@ -45,7 +49,6 @@ for i=1:lenimg
         next_code = next_code + 1;
         string = input;
     end
-    %valueset = values(code);
     prev_code = code(prev_string);
     compressed_img = [compressed_img,prev_code];
 end
@@ -53,8 +56,9 @@ disp('Adding the Last Code')
 prev_code = code(string);
 compressed_img = [compressed_img,prev_code];
 toc
+
 %% Evaluation
-maxcodeval = next_code;
+maxcodeval = max(values(code));
 maxbits = length(de2bi(maxcodeval));
 comp_img_bytes = length(compressed_img)*maxbits/8;
 disp('Compressed Image')
