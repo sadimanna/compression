@@ -99,7 +99,6 @@ void get_parent_code(char *childcode, char *parentcode)
 	parentcode[i-1]='\0';
 }
 
-
 void main()
 {
 	int i,j;
