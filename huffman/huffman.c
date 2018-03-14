@@ -306,7 +306,7 @@ void main()
 			printf("    %d      -> %s\n",pix_freq[0][i].pix,pix_freq[0][i].code);
 	}
 	//Write to text file
-	FILE *huffman = fopen("huffmancode.dot","wb");
+	FILE *huffman = fopen("huffmancode.txtt","wb");
 	fprintf(huffman,"Huffmann Codes::\n\n");
 	fprintf(huffman,"pixel values -> Code\n\n");
 	for(i=0;i<nnz;i++)
@@ -320,7 +320,7 @@ void main()
 	//Creating Graphical Tree
 	printf("Creating DOT file for Huffman Tree visualization...\n\n");
 	FILE *fp = fopen("huffman.dot","wb");
-	fprintf(fp,"digraph G {\n");
+	fprintf(fp,"digraph G {\n rotate = 180;\n ration=\"fill\";\n size = \"8.3,11.7!\";\n minlen=1.5;\n rankdir = LR;\n");
 	int parent[nnz*(nnz-1)/2];
 	int rightchildren[nnz*(nnz-1)/2];
 	int leftchildren[nnz*(nnz-1)/2];
@@ -330,29 +330,39 @@ void main()
 		for(i=0;i<nnz-j;i++)
 		{
 			if(j==0)
-				fprintf(fp,"%s [label=<%d<BR/>%s>]\n",pix_freq[j][i].code,pix_freq[j][i].pix,pix_freq[j][i].code);
+				fprintf(fp,"%s [label=<%d<BR/>%s>,color=lawngreen,fontcolor=magenta2,labelfontsize=35];\n",pix_freq[j][i].code,pix_freq[j][i].pix,pix_freq[j][i].code);
 			if(j==nnz-1)
 				strconcat(pix_freq[j][i].code,"start",'2');
 			if(pix_freq[j][i].left!=NULL)
 			{
 				if(ismember(pix_freq[j][i].left->pix,leftchildren,k)!=1)
-					fprintf(fp,"%s -> %s [label=%f]\n",pix_freq[j][i].code,pix_freq[j][i].left->code,pix_freq[j][i].left->freq);
+				{
+					fprintf(fp,"%s[color=goldenrod1,fontcolor=magenta2,labelfontsize=35];\n",pix_freq[j][i].code);
+					fprintf(fp,"%s -> %s [label=%f,color=blue2, fontcolor=darkorange2,labelfontsize=25];\n",pix_freq[j][i].code,pix_freq[j][i].left->code,pix_freq[j][i].left->freq);
+				}
 				else if((ismember(pix_freq[j][i].left->pix,leftchildren,k)==1) && (ismember(pix_freq[j][i].pix,parent,k)!=1))
-					fprintf(fp,"%s -> %s [label=%f]\n",pix_freq[j][i].code,pix_freq[j][i].left->code,pix_freq[j][i].left->freq);
+				{
+					fprintf(fp,"%s[color=goldenrod1,fontcolor=magenta2,labelfontsize=35];\n",pix_freq[j][i].code);
+					fprintf(fp,"%s -> %s [label=%f,color=blue2, fontcolor=darkorange2,labelfontsize=25];\n",pix_freq[j][i].code,pix_freq[j][i].left->code,pix_freq[j][i].left->freq);
+				}
 				leftchildren[k]=pix_freq[j][i].left->pix;
 			}
 			if(pix_freq[j][i].right!=NULL)
 			{
 				if(ismember(pix_freq[j][i].right->pix,rightchildren,k)!=1) 
-					fprintf(fp,"%s -> %s [label=%f]\n",pix_freq[j][i].code,pix_freq[j][i].right->code,pix_freq[j][i].right->freq);
+					fprintf(fp,"%s -> %s [label=%f,color=firebrick2, fontcolor=darkorange2,labelfontsize=35];\n",pix_freq[j][i].code,pix_freq[j][i].right->code,pix_freq[j][i].right->freq);
 				else if((ismember(pix_freq[j][i].right->pix,rightchildren,k)==1) && (ismember(pix_freq[j][i].pix,parent,k)!=1))
-					fprintf(fp,"%s -> %s [label=%f]\n",pix_freq[j][i].code,pix_freq[j][i].right->code,pix_freq[j][i].right->freq);
+					fprintf(fp,"%s -> %s [label=%f,color=firebrick2, fontcolor=darkorange2,labelfontsize=35];\n",pix_freq[j][i].code,pix_freq[j][i].right->code,pix_freq[j][i].right->freq);
 				rightchildren[k]=pix_freq[j][i].right->pix;
 			}
 			parent[k] = pix_freq[j][i].pix;
 			k++;
 		}
 	}
+	//fprintf(fp,"{rank = same; ");
+	//for(i=0;i<nnz;i++)
+	//	fprintf(fp,"%s; ",pix_freq[0][i].code);
+	//fprintf(fp,"}\n");
 	fprintf(fp,"}\n");
 	fclose(fp);
 	printf("DOT File created...\n\nSaving to Image and PDF Files...\n\n");
