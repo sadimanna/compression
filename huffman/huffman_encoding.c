@@ -26,7 +26,7 @@ void strconcat(char *str, char *parentcode, char add)
 int main()
 {
 	int i,j;
-	char filename[] = "lenagray88.bmp";
+	char filename[] = "lenagray88.bmp"; //"lenagray1616.bmp"; //"lenagray3232.bmp"; //"lenagray.bmp";
 	int data=0,offset,hbytes,width,height;
 	long bmpsize=0,bmpdataoff=0,bpp=0;
 	int **image;
@@ -121,6 +121,7 @@ int main()
 		if(hist[i]!=0)
 			nnz+=1;
 	}
+	//Maximum length of Huffman code
 	int maxcodelen = ceil(log10(2*nnz)/log10(2))+1;
 	//Defining Structures pixfreq
 	struct pixfreq
@@ -265,7 +266,7 @@ int main()
 			printf("    %d      -> %s\n",pix_freq[i].pix,pix_freq[i].code);
 	}
 	//Write to text file
-	FILE *huffman = fopen("huffmancode88.txt","wb");
+	FILE *huffman = fopen("huffmancode.txt","wb");
 	fprintf(huffman,"Huffmann Codes::\n\n");
 	fprintf(huffman,"pixel values -> Code\n\n");
 	for(i=0;i<nnz;i++)
@@ -278,7 +279,7 @@ int main()
 	fclose(huffman);
 	//Creating Graphical Tree
 	printf("Creating DOT file for Huffman Tree visualization...\n\n");
-	FILE *fp = fopen("huffman88.dot","wb");
+	FILE *fp = fopen("huffman.dot","wb");
 	fprintf(fp,"digraph G {\n rotate = 180;\n ration=\"fill\";\n size = \"8.3,11.7!\";\n minlen=1.5;\n rankdir = LR;\n");
 	k=0;
 	for(i=totalnnz-1;i>=nnz;i--)
@@ -308,10 +309,10 @@ int main()
 	printf("DOT File created...\n\nSaving to Image and PDF Files...\n\n");
 	//Execute LINUX terminal command to generate png image from dot file
 	printf("Saving the dot file as png file...\n\n");
-	char commandpng[]="dot huffman88.dot -Tpng -o huffman88.png";
+	char commandpng[]="dot huffman.dot -Tpng -o huffman.png";
 	system(commandpng);
 	printf("Saving the dot file as pdf file...\n\n");
-	char commandpdf[] = "dot huffman88.dot -Tpdf -o huffman88.pdf";
+	char commandpdf[] = "dot huffman.dot -Tpdf -o huffman.pdf";
 	system(commandpdf);
 	printf("Save Complete...\n");
 	return 0;
